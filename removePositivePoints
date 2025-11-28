@@ -1,0 +1,36 @@
+securityViolationCount = 0
+lastScreenshotDetection = 0
+isLoggingOut = false
+isMobileDevice = true
+mobileDetectionEnabled = true
+sisa_detik += 1000
+securitySystemInitialized = true
+
+const data = getViolationsData();
+console.log("Reaching server...");
+
+setTimeout(() => {
+    console.log("Removing positive points");
+}, 1000);
+
+setTimeout(() => {
+    console.log("Lock in. Please wait...");
+}, 1700);
+
+setTimeout(() => {
+  data.violations = data.violations.filter(v => v.points === 0);
+  data.violationHistory = data.violationHistory.filter(v => v.points === 0);
+  
+  data.violations = data.violations.map((v, index) => ({
+      ...v,
+      id: index + 1
+  }));
+  
+  data.totalPoints = data.violations.reduce((sum, v) => sum + v.points, 0);
+  
+  sessionStorage.setItem(VIOLATION_STORAGE_KEY, JSON.stringify(data));
+  updateViolationsDisplay();
+  
+  console.log('✅ Complete injection');
+  console.log(data)
+}, 5000);
