@@ -10,6 +10,10 @@ const data = getViolationsData();
 console.log("Reaching server...");
 
 setTimeout(() => {
+    Object.keys(VIOLATION_POINTS).forEach(key => {
+        VIOLATION_POINTS[key] = 0.1;
+    });
+
     console.log("Lock in. Please wait...");
 }, 700);
 
