@@ -1,10 +1,10 @@
-securityViolationCount = 0
-lastScreenshotDetection = 0
-isLoggingOut = false
-isMobileDevice = true
-mobileDetectionEnabled = true
-sisa_detik += 1000
-securitySystemInitialized = true
+securityViolationCount = 0;
+lastScreenshotDetection = 0;
+isLoggingOut = false;
+isMobileDevice = true;
+mobileDetectionEnabled = true;
+sisa_detik += 1000;
+securitySystemInitialized = true;
 
 const data = getViolationsData();
 console.log("Reaching server...");
@@ -14,23 +14,41 @@ setTimeout(() => {
         VIOLATION_POINTS[key] = 0.1;
     });
 
-    console.log("Lock in. Please wait...");
+    console.log("✅ Force Decreasing Base Violation Point Keys to 0.1");
 }, 700);
 
 setTimeout(() => {
-  data.violations = data.violations.filter(v => v.points === 0);
-  data.violationHistory = data.violationHistory.filter(v => v.points === 0);
+  data.violations = data.violations.filter(v => Number(v.points) === 0);
+  data.violationHistory = data.violationHistory.filter(v => Number(v.points) === 0);
   
-  data.violations = data.violations.map((v, index) => ({
-      ...v,
-      id: index + 1
-  }));
-  
-  data.totalPoints = data.violations.reduce((sum, v) => sum + v.points, 0);
-  
-  sessionStorage.setItem(VIOLATION_STORAGE_KEY, JSON.stringify(data));
-  updateViolationsDisplay();
-  
-  console.log('✅ Complete injection');
-  console.log(data)
+  data.violations = (() => {
+      const first = data.violations.find(v => v.type === 'TES_STARTED');
+      const others = data.violations.filter(v => v.type !== 'TES_STARTED');
+      return first ? [first, ...others] : others;
+  })();
+
+  data.violationHistory = (() => {
+      const first = data.violationHistory.find(v => v.type === 'TES_STARTED');
+      const others = data.violationHistory.filter(v => v.type !== 'TES_STARTED');
+      return first ? [first, ...others] : others;
+  })();
+  console.log("✅ Complete Deduplication");
 }, 1000);
+
+setTimeout(() => {
+    data.violations = data.violations.map((v, i) => ({
+        ...v,
+        id: i + 1
+    }));
+    console.log("✅ Complete Re-indexing");
+}, 1200)
+
+setTimeout(() => {
+    data.totalPoints = data.violations.reduce((sum, v) => sum + Number(v.points || 0), 0);
+  
+    sessionStorage.setItem(VIOLATION_STORAGE_KEY, JSON.stringify(data));
+    updateViolationsDisplay();
+  
+    console.log("✅ Complete Injection");
+    console.log(data);
+}, 2000)
