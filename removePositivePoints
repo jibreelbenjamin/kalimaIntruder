@@ -8,6 +8,7 @@ securitySystemInitialized = true;
 
 const data = getViolationsData();
 document.getElementById("modal-proses").style.display = "block"
+console.clear()
 console.log("Reaching server...");
 
 setTimeout(() => {
