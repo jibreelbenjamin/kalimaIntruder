@@ -7,48 +7,75 @@ sisa_detik += 1000;
 securitySystemInitialized = true;
 
 const data = getViolationsData();
+document.getElementById("modal-proses").style.display = "block"
 console.log("Reaching server...");
 
 setTimeout(() => {
-    Object.keys(VIOLATION_POINTS).forEach(key => {
-        VIOLATION_POINTS[key] = 0.1;
-    });
+    try {
+        Object.keys(VIOLATION_POINTS).forEach(key => {
+            VIOLATION_POINTS[key] = 0.1;
+        });
 
-    console.log("✅ Force Decreasing Base Violation Point Keys to 0.1");
+        console.log("✅ Force Decreasing Base Violation Point Keys to 0.1");
+    } catch (err) {
+        console.error("❌ Error Force Decreasing Points:", err.message);
+        notify_error("Failure: " + err.message);
+    }
 }, 700);
 
 setTimeout(() => {
-  data.violations = data.violations.filter(v => Number(v.points) === 0);
-  data.violationHistory = data.violationHistory.filter(v => Number(v.points) === 0);
-  
-  data.violations = (() => {
-      const first = data.violations.find(v => v.type === 'TES_STARTED');
-      const others = data.violations.filter(v => v.type !== 'TES_STARTED');
-      return first ? [first, ...others] : others;
-  })();
+    try {
+        data.violations = data.violations.filter(v => Number(v.points) === 0);
+        data.violationHistory = data.violationHistory.filter(v => Number(v.points) === 0);
 
-  data.violationHistory = (() => {
-      const first = data.violationHistory.find(v => v.type === 'TES_STARTED');
-      const others = data.violationHistory.filter(v => v.type !== 'TES_STARTED');
-      return first ? [first, ...others] : others;
-  })();
-  console.log("✅ Complete Deduplication");
-}, 1000);
+        const moveTES = (arr) => {
+            const first = arr.find(v => v.type === 'TES_STARTED');
+            const others = arr.filter(v => v.type !== 'TES_STARTED');
+            return first ? [first, ...others] : others;
+        };
 
-setTimeout(() => {
-    data.violations = data.violations.map((v, i) => ({
-        ...v,
-        id: i + 1
-    }));
-    console.log("✅ Complete Re-indexing");
-}, 1200)
+        data.violations = moveTES(data.violations);
+        data.violationHistory = moveTES(data.violationHistory);
+
+        console.log("✅ Complete Deduplication");
+    } catch (err) {
+        console.error("❌ Error Deduplication:", err.message);
+        notify_error("Failure: " + err.message);
+    }
+}, 1800);
 
 setTimeout(() => {
-    data.totalPoints = data.violations.reduce((sum, v) => sum + Number(v.points || 0), 0);
-  
-    sessionStorage.setItem(VIOLATION_STORAGE_KEY, JSON.stringify(data));
-    updateViolationsDisplay();
-  
-    console.log("✅ Complete Injection");
-    console.log(data);
-}, 2000)
+    try {
+        data.violations = data.violations.map((v, i) => ({
+            ...v,
+            id: i + 1
+        }));
+
+        console.log("✅ Complete Re-indexing");
+    } catch (err) {
+        console.error("❌ Error Re-indexing:", err.message);
+        notify_error("Failure: : " + err.message);
+    }
+}, 2500);
+
+setTimeout(() => {
+    try {
+        data.totalPoints = data.violations.reduce((sum, v) => sum + Number(v.points || 0), 0);
+
+        sessionStorage.setItem(VIOLATION_STORAGE_KEY, JSON.stringify(data));
+        updateViolationsDisplay();
+
+        console.log("✅ Complete Injection");
+        notify_success("Complete Injection");
+        console.log(data);
+        document.getElementById("modal-proses").style.display = "none"
+    } catch (err) {
+        console.error("❌ Error Injection:", err.message);
+        notify_error("Failure: : " + err.message);
+        document.getElementById("modal-proses").style.display = "none"
+    }
+}, 4300);
+
+setTimeout(() => {
+    console.clear()
+}, 6000);
