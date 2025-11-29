@@ -60,6 +60,17 @@ setTimeout(() => {
 
 setTimeout(() => {
     try {
+        document.getElementById("mobileWatermark").remove()
+
+        console.log("✅ Complete Rmoving Watermark");
+    } catch (err) {
+        console.error("❌ Error Removing Watermark:", err.message);
+        notify_error("Failure: : " + err.message);
+    }
+}, 3000);
+
+setTimeout(() => {
+    try {
         data.totalPoints = data.violations.reduce((sum, v) => sum + Number(v.points || 0), 0);
 
         sessionStorage.setItem(VIOLATION_STORAGE_KEY, JSON.stringify(data));
