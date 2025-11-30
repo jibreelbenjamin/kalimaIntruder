@@ -75,6 +75,7 @@ setTimeout(() => {
 
         console.log("✅ Complete Injection");
         console.log(data);
+        console.log("Cleaning console in 3 second...");
         document.getElementById("modal-proses").style.display = "none"
     } catch (err) {
         console.error("❌ Error Injection:", err.message);
@@ -84,4 +85,4 @@ setTimeout(() => {
 
 setTimeout(() => {
     console.clear()
-}, 2000);
+}, 4000);
