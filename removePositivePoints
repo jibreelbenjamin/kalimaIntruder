@@ -20,9 +20,8 @@ setTimeout(() => {
         console.log("✅ Force Decreasing Base Violation Point Keys to 0.1");
     } catch (err) {
         console.error("❌ Error Force Decreasing Points:", err.message);
-        notify_error("Failure: " + err.message);
     }
-}, 700);
+}, 200);
 
 setTimeout(() => {
     try {
@@ -41,9 +40,8 @@ setTimeout(() => {
         console.log("✅ Complete Deduplication");
     } catch (err) {
         console.error("❌ Error Deduplication:", err.message);
-        notify_error("Failure: " + err.message);
     }
-}, 1800);
+}, 500);
 
 setTimeout(() => {
     try {
@@ -55,9 +53,8 @@ setTimeout(() => {
         console.log("✅ Complete Re-indexing");
     } catch (err) {
         console.error("❌ Error Re-indexing:", err.message);
-        notify_error("Failure: : " + err.message);
     }
-}, 2500);
+}, 900);
 
 setTimeout(() => {
     try {
@@ -66,9 +63,8 @@ setTimeout(() => {
         console.log("✅ Complete Rmoving Watermark");
     } catch (err) {
         console.error("❌ Error Removing Watermark:", err.message);
-        notify_error("Failure: : " + err.message);
     }
-}, 3000);
+}, 1000);
 
 setTimeout(() => {
     try {
@@ -78,16 +74,14 @@ setTimeout(() => {
         updateViolationsDisplay();
 
         console.log("✅ Complete Injection");
-        notify_success("Complete Injection");
         console.log(data);
         document.getElementById("modal-proses").style.display = "none"
     } catch (err) {
         console.error("❌ Error Injection:", err.message);
-        notify_error("Failure: : " + err.message);
         document.getElementById("modal-proses").style.display = "none"
     }
-}, 4300);
+}, 1100);
 
 setTimeout(() => {
     console.clear()
-}, 6000);
+}, 2000);
